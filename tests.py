@@ -1,11 +1,16 @@
 import unittest
-import shapes
+from shapes import Point
+
+class PointsTestCases(unittest.TestCase):
+    """Basic tests on Point objects"""
+    pass
+
 
 class LinesTestCases(unittest.TestCase):
     """Test cases with only lines"""
     def setUp(self):
         pt1 = Point(0, 0)
-        pt2 = point(1, 1)
+        pt2 = Point(1, 1)
         pass
     
 
