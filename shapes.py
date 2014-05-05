@@ -149,6 +149,7 @@ class LineSegment(Line):
                point.y >= min(self.endpoint1.y, self.endpoint2.y) and \
                point.y <= max(self.endpoint1.y, self.endpoint2.y)
 
+
 class Polygon(object):
     vertices = []
     def __init__(self, *args):
@@ -259,7 +260,21 @@ def line_circle_intersect(line, circle):
     """ Taken from Wolfram mathworld: http://mathworld.wolfram.com/Circle-LineIntersection.html
     This is a straightforward test for whether a line will, at some point, 
     intersect a circle."""
-    pass
+    # for vertical lines: create a point on the line that has a y-coordiate the
+    # same as the circle's center. Then test to see if that line is in the circle.
+    if line.slope == float('inf'):
+        test_point = Cartesian(line.x, circle.y)
+        return circle.point_in_circle(test_point)
+    else:
+        new_x = line.x + 1
+        new_y = line.y_given_x(new_x)
+        dx = line.x - new_x
+        dy = line.y - new_y
+        dr = math.sqrt(dx**2 + dy**2)
+        D = new_x*line.y - line.x*new_y
+        discriminant = circle.radius**2 * dr**2 - D**2
+
+        return discriminant >= 0
 
 def line_polygon_intersect(line, polygon):
     """ Tests each edge of the Polygon recursively to see if it intersects 
@@ -277,7 +292,14 @@ def circle_circle_intersect(circle1, circle2):
             circle1.radius + circle2.radius)
 
 def circle_linesegment_intersect(circle, segment):
-    pass
+    """Exploit the fact that LineSegments are also considered lines, and first
+    determine if the line that segment is a portion of intersects the circle
+    at all. If so, then find the intersection point and determine if it is in
+    the segment range"""
+    if line_circle_intersect(circle, segment):
+        pass
+    else:
+        return False
 
 def circle_polygon_intersect(circle, polygon):
     """ This method returns whether a line segment intersects with a circle.
