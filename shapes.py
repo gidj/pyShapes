@@ -84,6 +84,7 @@ class LineByPoints(Line):
 
 
 class LineBySlope(Line):
+    """ Create a Line object when given a Point object and a slope"""
     def __init__(self, point, slope):
         self._x = point.x
         self._y = point.y
@@ -100,18 +101,24 @@ class Polygon(object):
 
 
 class Circle(object):
+    """ Circle objects are represented by a center Point object and a radius
+    scalar. """
     def __init__(self, center, radius):
         self._center = center
         self._radius = radius
+
     center = property(lambda self: self._center)
     x = property(lambda self: self.center.x)
     y = property(lambda self: self.center.y)
     radius = property(lambda self: self._radius)
 
     def perimeter(self):
+        """ returns the perimeter of the circle """
         return 2 * math.pi * self.radius
 
     def point_in_circle(self, point):
+        """ returns true if the given Point object lies on or within the 
+        perimeter of the Circle object """
         return point.distance_to_point(self.center) <= self.radius
 
 
