@@ -47,10 +47,14 @@ class CartesianPointsTestCases(unittest.TestCase):
 class LinesTestCases(unittest.TestCase):
     """Test cases with onself.ly lines"""
     def setUp(self):
-        pt1 = Cartesian(0, 0)
-        pt2 = Cartesian(1, 1)
+        self.pt1 = Cartesian(0, 0)
+        self.pt2 = Cartesian(1, 1)
+        self.pt3 = Cartesian(1, 2)
         pass
 
+    def test_slope_is_one(self):
+        l = LineByPoints(self.pt1, self.pt2)
+        self.assertEqual(l.slope, 1)
 
 class CirclesTestCases(unittest.TestCase):
     """Test cases with only circles"""
