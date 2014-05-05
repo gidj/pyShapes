@@ -1,6 +1,6 @@
 import unittest
 from math import pi
-from shapes import Cartesian, Polar, Line, Polygon
+from shapes import Cartesian, Polar, Line, LineByPoints, LineBySlope, Polygon
 
 class PolarPointsTestCases(unittest.TestCase):
     """Basic tests on Point objects"""
@@ -29,11 +29,20 @@ class PolarPointsTestCases(unittest.TestCase):
 class CartesianPointsTestCases(unittest.TestCase):
     def setUp(self):
         self.cart1 = Cartesian(0, 0)
-        self.cart2 = Cartesian(1, 2)
-        self.cart3 = Cartesian(-1, -1)
-        self.cart4 = Cartesian(2, -4)
+        self.cart2 = Cartesian(1, 0)
+        self.cart3 = Cartesian(0, 10)
+        self.cart4 = Cartesian(-2, 0)
         self.cart5 = Cartesian(-3, 2)
-    
+
+    def test_origin_cartesian_converts_to_theta_zero(self):
+        self.assertEqual(self.cart1.theta, 0)
+
+    def test_negative_x_and_zero_y_is_pi(self):
+        self.assertAlmostEqual(self.cart4.theta, pi)
+
+    def test_number_on_the_positive_y_axis_is_half_pi(self):
+        self.assertAlmostEqual(self.cart3.theta, pi/2)
+
 
 class LinesTestCases(unittest.TestCase):
     """Test cases with onself.ly lines"""
@@ -41,7 +50,7 @@ class LinesTestCases(unittest.TestCase):
         pt1 = Cartesian(0, 0)
         pt2 = Cartesian(1, 1)
         pass
-    
+
 
 class CirclesTestCases(unittest.TestCase):
     """Test cases with only circles"""
