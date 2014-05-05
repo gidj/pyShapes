@@ -52,7 +52,14 @@ class LinesTestCases(unittest.TestCase):
         self.pt3 = Cartesian(1, 2)
         self.pt4 = Cartesian(0, 2)
         self.pt5 = Cartesian(1, -1)
-        pass
+
+    def test_y_given_x_of_5_with_slope_of_1(self):
+        l = LineByPoints(self.pt1, self.pt2)
+        self.assertEqual(l.y_given_x(5), 5)
+
+    def test_x_given_y_of_5_with_slope_of_1(self):
+        l = LineByPoints(self.pt1, self.pt2)
+        self.assertEqual(l.x_given_y(5), 5)
 
     def test_slope_is_one(self):
         l = LineByPoints(self.pt1, self.pt2)
