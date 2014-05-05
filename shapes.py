@@ -34,19 +34,12 @@ class Polar(Point):
 
 
 class Cartesian(Point):
-    """Create a Point object given x- and y-coordinates. When the point is at
-    the origin (0, 0), conversion to polar units will result in a 
-    ZeroDivisionError. Here we test for it and give it the reasonable value 
-    '0' """
+    """Create a Point object given x- and y-coordinates. """
     def __init__(self, x, y):
         self._x = x
         self._y = y
     r = property(lambda self: math.sqrt(self.x**2 + self.y**2))
-    if r == 0:
-        theta = 0
-    else:
-        theta = property(lambda self: math.atan((1.0*self.x) / self.y))
-
+    theta = property(lambda self: math.atan2(self.y, self.x))
 
 class Line(object):
     """Base Line class that is the parent of LineByPoints and LineBySlope
