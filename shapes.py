@@ -24,7 +24,8 @@ class Point(object):
         return (self.r, self.theta)
 
     def distance_to_point(self, point):
-        pass
+        """ Returns the absolute distance from this point to a given point """
+        return math.sqrt((self.x - point.x)**2 + (self.y - point.y)**2)
 
 
 class Polar(Point):
