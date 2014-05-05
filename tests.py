@@ -46,7 +46,7 @@ class CartesianPointsTestCases(unittest.TestCase):
 
 
 class LinesTestCases(unittest.TestCase):
-    """Test cases with onself.ly lines"""
+    """Test cases with only lines"""
     def setUp(self):
         self.pt1 = Cartesian(0, 0)
         self.pt2 = Cartesian(1, 1)
@@ -94,9 +94,22 @@ class CirclesTestCases(unittest.TestCase):
         test_point = Cartesian(5, 0)
         self.assertTrue(self.circ.point_in_circle(test_point))
 
+    def test_point_outside_of_circle(self):
+        test_point = Cartesian(10, 10)
+        self.assertFalse(self.circ.point_in_circle(test_point))
+
 class PolygonTestCases(unittest.TestCase):
     """Test cases with only polygons"""
     def setUp(self):
+        self.p1 = Cartesian(1, 0)
+        self.p2 = Cartesian(1, 2)
+        self.p3 = Cartesian(3, 2)
+        self.p4 = Cartesian(3, 0)
+        poly1 = Polygon(self.p1,
+                        self.p2,
+                        self.p3,
+                        self.p4)
+
         pass
 
 
