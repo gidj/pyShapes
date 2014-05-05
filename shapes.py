@@ -1,6 +1,5 @@
 import math
 
-
 class Point(object):
     """Base Point class that is the parent to both Polar and Cartesian
     representations of points"""
@@ -88,15 +87,18 @@ class Polygon(object):
 
 class Circle(object):
     def __init__(self, center, radius):
-        self._x = center.x
-        self._y = center.y
+        self._center = center
         self._radius = radius
-    x = property(lambda self: self._x)
-    y = property(lambda self: self._y)
+    center = property(lambda self: self._center)
+    x = property(lambda self: self.center.x)
+    y = property(lambda self: self.center.y)
     radius = property(lambda self: self._radius)
 
     def perimeter(self):
         return 2 * math.pi * self.radius
+
+    def point_in_circle(self, point):
+        return point.distance_to_point(self.center) <= self.radius
 
 
 
