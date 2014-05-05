@@ -2,7 +2,7 @@ import math
 
 
 class Point(object):
-    """Abstract Point class that is the parent to both Polar and Cartesian
+    """Base Point class that is the parent to both Polar and Cartesian
     representations of points"""
     x = property(lambda self: self._x)
     y = property(lambda self: self._y)
@@ -42,9 +42,37 @@ class Cartesian(Point):
     theta = property(lambda self: math.atan((1.0*self.x) / self.y))
 
 
-class Line:
+class Line(object):
+    """Base Line class that is the parent of LineByPoints and LineBySlope
+    classes that are derived from it. All lines can be represented by a slope
+    and a point--here, the y-intercept."""
+    x = property(lambda self: self._x)
+    y = property(lambda self: self._y)
+    slope = property(lambda self: self._slope)
+
+    def is_verticle(self):
+        return self.slope == float('inf')
+    
+
+class LineByPoints(Line):
+    def __init__(self, point1, point2):
+        # In the case of a verticle line
+        if point1.x == point2.x:
+            self._slope = float('inf')
+            self._x = point1.x
+            self._y = point1.y
+        else:
+            self._slope = (1.0 * (point2.y-point1.y)) / (point2.x-point1.x)
+            self._x = point1.x
+            self._y = point1.y
+
+
+class LineBySlope(Line):
     def __init__(self, point, slope):
-        pass
+        self._x = point.x
+        self._y = point.y
+        self._slope = slope
+
 
 class Polygon:
     def __init__(self, *args):
