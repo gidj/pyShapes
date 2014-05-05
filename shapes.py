@@ -34,7 +34,10 @@ class Polar(Point):
 
 
 class Cartesian(Point):
-    """Create a Point object given x- and y-coordinates"""
+    """Create a Point object given x- and y-coordinates. When the point is at
+    the origin (0, 0), conversion to polar units will result in a 
+    ZeroDivisionError. Here we test for it and give it the reasonable value 
+    '0' """
     def __init__(self, x, y):
         self._x = x
         self._y = y
@@ -78,5 +81,9 @@ class LineBySlope(Line):
 
 
 class Polygon(object):
+    vertices = []
     def __init__(self, *args):
+        pass
+
+    def perimeter(self):
         pass
