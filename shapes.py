@@ -52,6 +52,12 @@ class Line(object):
     y = property(lambda self: self._y)
     slope = property(lambda self: self._slope)
 
+    def intersect(self, obj):
+        """ Check which instance the object is, and dispatch the appropriate 
+        intersection test method """
+        if isinstance(obj, Line):
+            return line_line_intersect(self, obj)
+
     def is_vertical(self):
         return self.slope == float('inf')
 
@@ -91,13 +97,45 @@ class LineBySlope(Line):
         self._slope = slope
 
 
+class LineSegment(object):
+    """ Define a LineSegment object that will make checking if polygons
+    intersect much easier."""
+    def __init__(self, point1, point2):
+        self._endpoint1 = point1
+        self._endpoint2 = point2
+
+    endpoint1 = property(lambda self: self._endpoint1)
+    endpoint2 = property(lambda self: self._endpoint2)
+
+    def length(self):
+        return self.endpoint1.distance_to_point(self.endpoint2)
+
 class Polygon(object):
     vertices = []
     def __init__(self, *args):
-        pass
+        for point in args:
+            self.vertices.append(point)
+
+    def edges(self):
+        edges = []
+        if len(self.vertices) < 2:
+            return edges
+        else:
+            p0 = self.vertices[-1]
+            for vertex in self.vertices:
+               edges.append(LineSegment(p0, vertex))
+               p0 = vertex
+            
+            return edges
 
     def perimeter(self):
-        pass
+        if len(self.vertices) < 2:
+            return 0
+        else:
+            perimeter = 0
+            for edge in self.edges():
+                perimeter += edge.length
+            return perimeter
 
 
 class Circle(object):
@@ -122,5 +160,35 @@ class Circle(object):
         return point.distance_to_point(self.center) <= self.radius
 
 
+
+def line_line_intersect(line1, line2):
+    pass
+
+def line_linesegment_intersect(line, segment):
+    pass
+
+def line_circle_intersect(line, circle):
+    pass
+
+def line_polygon_intersect(line, polygon):
+    pass
+
+def circle_circle_intersect(circle1, circle2):
+    pass
+
+def circle_linesegment_intersect(circle, segment):
+    pass
+
+def circle_polygon_intersect(circle, polygon):
+    pass
+
+def linesegment_linesegment_intersect(segment1, segment2):
+    pass
+
+def linesegment_polygon_intersect(segment, polygon):
+    pass
+
+def polygon_polygon_segment1(polygon1, polygon2):
+    pass
 
 
