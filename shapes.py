@@ -39,7 +39,10 @@ class Cartesian(Point):
         self._x = x
         self._y = y
     r = property(lambda self: math.sqrt(self.x**2 + self.y**2))
-    theta = property(lambda self: math.atan((1.0*self.x) / self.y))
+    if r == 0:
+        theta = 0
+    else:
+        theta = property(lambda self: math.atan((1.0*self.x) / self.y))
 
 
 class Line(object):
@@ -74,6 +77,6 @@ class LineBySlope(Line):
         self._slope = slope
 
 
-class Polygon:
+class Polygon(object):
     def __init__(self, *args):
         pass
