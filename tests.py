@@ -1,6 +1,7 @@
 import unittest
 from math import pi
-from shapes import Cartesian, Polar, Line, LineByPoints, LineBySlope, Polygon
+from shapes import Cartesian, Polar, Line, LineByPoints, LineBySlope
+from shapes import Circle, Polygon
 
 class PolarPointsTestCases(unittest.TestCase):
     """Basic tests on Point objects"""
@@ -81,8 +82,17 @@ class LinesTestCases(unittest.TestCase):
 class CirclesTestCases(unittest.TestCase):
     """Test cases with only circles"""
     def setUp(self):
-        pass
+        self.p = Cartesian(0, 0)
+        self.p1 = Cartesian(1, 1)
+        self.circ = Circle(self.p, 5)
+        self.circ1 = Circle(self.p1, 1)
 
+    def test_perimeter(self):
+        self.assertAlmostEqual(self.circ1.perimeter(), 2*pi)
+
+    def test_edge_of_circle_in_circle(self):
+        test_point = Cartesian(5, 0)
+        self.assertTrue(self.circ.point_in_circle(test_point))
 
 class PolygonTestCases(unittest.TestCase):
     """Test cases with only polygons"""
