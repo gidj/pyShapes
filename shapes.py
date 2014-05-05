@@ -52,7 +52,7 @@ class Line(object):
     y = property(lambda self: self._y)
     slope = property(lambda self: self._slope)
 
-    def is_verticle(self):
+    def is_vertical(self):
         return self.slope == float('inf')
     
 
