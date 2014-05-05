@@ -222,7 +222,11 @@ def line_polygon_intersect(line, polygon):
     pass
 
 def circle_circle_intersect(circle1, circle2):
-    pass
+    """ Returns whether two circles intersect. This is accomplished by seeing
+    if the distance between their centers is less than or equal to the sum of
+    their radii. If so, then they must intersect."""
+    return (circle1.center.distance_to_point(circle2.center) <=
+            circle1.radius + circle2.radius)
 
 def circle_linesegment_intersect(circle, segment):
     pass
