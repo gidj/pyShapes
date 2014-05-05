@@ -257,7 +257,8 @@ def line_linesegment_intersect(line, segment):
 
 def line_circle_intersect(line, circle):
     """ Taken from Wolfram mathworld: http://mathworld.wolfram.com/Circle-LineIntersection.html
-    This is a straightforward test for whether 
+    This is a straightforward test for whether a line will, at some point, 
+    intersect a circle."""
     pass
 
 def line_polygon_intersect(line, polygon):
@@ -281,7 +282,10 @@ def circle_polygon_intersect(circle, polygon):
         c. Calculate the intersection points and see if they are on the line
         segment
     """
-    pass
+    for edge in polygon.edges():
+        if circle_linesegment_intersect(circle, edge):
+            return True
+    return False
 
 def linesegment_linesegment_intersect(segment1, segment2):
     pass
