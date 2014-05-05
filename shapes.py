@@ -54,11 +54,25 @@ class Line(object):
 
     def is_vertical(self):
         return self.slope == float('inf')
-    
+
+    def x_given_y(self, y):
+        """ Given a y value, return the associated value for x"""
+        if self.slope == float('inf'):
+            return self.x
+        else:
+            return ((y - self.y) / self.slope) + self.x
+
+    def y_given_x(self, x):
+        """ Given a x value, return the associated value for y. Returns
+        the internal value of y for a vertical line"""
+        if self.slope == float('inf'):
+            return self.y
+        else:
+            return (self.slope * (x - self.x)) + self.y
 
 class LineByPoints(Line):
     def __init__(self, point1, point2):
-        # In the case of a verticle line
+        # In the case of a vertical line
         if point1.x == point2.x:
             self._slope = float('inf')
             self._x = point1.x
