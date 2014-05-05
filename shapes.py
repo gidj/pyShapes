@@ -80,3 +80,15 @@ class Polygon(object):
 
     def perimeter(self):
         pass
+
+
+class Circle(object):
+    def __init__(self, center, radius):
+        self._center = center
+        self._radius = radius
+    center = property(lambda self: self._center)
+    radius = property(lambda self: self._radius)
+
+
+
+
