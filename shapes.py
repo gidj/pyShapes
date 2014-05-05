@@ -232,15 +232,34 @@ def circle_linesegment_intersect(circle, segment):
     pass
 
 def circle_polygon_intersect(circle, polygon):
+    """ This method returns whether a line segment intersects with a circle.
+    This is reduced to the following:
+        a. Does the line that the segment is a part of intersect? If yes, then:
+        b. Are either of the endpoints contained within the circle? If no, then:
+        c. Calculate the intersection points and see if they are on the line
+        segment
+    """
     pass
 
 def linesegment_linesegment_intersect(segment1, segment2):
     pass
 
 def linesegment_polygon_intersect(segment, polygon):
-    pass
+    """ Tests to see if each edge of a Polygon intersects with the given line 
+    segment. If any one edge does, return True. If none do, return False."""
+    for edge in polygon.edges():
+        if linesegment_linesegment_intersect(edge, segment):
+            return True
+    return False
 
 def polygon_polygon_intersect(polygon1, polygon2):
-    pass
+    """Polygon - Polygon intersection is reduced to recursive segment - segment
+    tests. This is true because if one polygon intersects another, at least one
+    of its edges must intersect at least one of the other polygon's segments."""
+    for edge1 in polygon1.edges():
+        for edge2 in polygon2.edges():
+            if linesegment_linesegment_intersect(edge1, edge2):
+                return True
+    return False
 
 
