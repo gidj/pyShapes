@@ -50,11 +50,26 @@ class LinesTestCases(unittest.TestCase):
         self.pt1 = Cartesian(0, 0)
         self.pt2 = Cartesian(1, 1)
         self.pt3 = Cartesian(1, 2)
+        self.pt4 = Cartesian(0, 2)
+        self.pt5 = Cartesian(1, -1)
         pass
 
     def test_slope_is_one(self):
         l = LineByPoints(self.pt1, self.pt2)
         self.assertEqual(l.slope, 1)
+
+    def test_verticle_line_slope_is_inf(self):
+        l = LineByPoints(self.pt2, self.pt3)
+        self.assertEqual(l.slope, float('inf'))
+
+    def test_horizontal_line_slope_is_zero(self):
+        l = LineByPoints(self.pt3, self.pt4)
+        self.assertEqual(l.slope, 0)
+
+    def test_negative_slope(self):
+        l = LineByPoints(self.pt1, self.pt5)
+        self.assertEqual(l.slope, -1)
+
 
 class CirclesTestCases(unittest.TestCase):
     """Test cases with only circles"""

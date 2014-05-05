@@ -23,6 +23,9 @@ class Point(object):
         """ Returns the r, theta polar coordinates as a tuple """
         return (self.r, self.theta)
 
+    def distance_to_point(self, point):
+        pass
+
 
 class Polar(Point):
     """Create a Point object given a radius 'r' and an angle 'theta'"""
@@ -84,10 +87,15 @@ class Polygon(object):
 
 class Circle(object):
     def __init__(self, center, radius):
-        self._center = center
+        self._x = center.x
+        self._y = center.y
         self._radius = radius
-    center = property(lambda self: self._center)
+    x = property(lambda self: self._x)
+    y = property(lambda self: self._y)
     radius = property(lambda self: self._radius)
+
+    def perimeter(self):
+        return 2 * math.pi * self.radius
 
 
 
