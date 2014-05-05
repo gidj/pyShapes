@@ -262,7 +262,12 @@ def line_circle_intersect(line, circle):
     pass
 
 def line_polygon_intersect(line, polygon):
-    pass
+    """ Tests each edge of the Polygon recursively to see if it intersects 
+    with a given line. """
+    for edge in polygon.edges():
+        if line_linesegment_intersect(line, edge):
+            return True
+    return False
 
 def circle_circle_intersect(circle1, circle2):
     """ Returns whether two circles intersect. This is accomplished by seeing
@@ -288,7 +293,9 @@ def circle_polygon_intersect(circle, polygon):
     return False
 
 def linesegment_linesegment_intersect(segment1, segment2):
-    pass
+    """ This is just a slightly special case of line and linesegment
+    intersection. The test is the same."""
+    return line_linesegment_intersect(segment1, segment2)
 
 def linesegment_polygon_intersect(segment, polygon):
     """ Tests to see if each edge of a Polygon intersects with the given line 
