@@ -52,14 +52,15 @@ class Line(object):
     x = property(lambda self: self._x)
     y = property(lambda self: self._y)
     slope = property(lambda self: self._slope)
+    y_intercept = property(lambda self: self.y_given_x(0))
 
     def intersect(self, obj):
         """ Check which instance the object is, and dispatch the appropriate 
         intersection test method """
-        if isinstance(obj, Line):
-            return line_line_intersect(self, obj)
-        elif isinstance(obj, LineSegment):
+        if isinstance(obj, LineSegment):
             return line_linesegment_intersect(self, obj)
+        elif isinstance(obj, Line):
+            return line_line_intersect(self, obj)
         elif isinstance(obj, Circle):
             return line_circle_intersect(self, obj)
         elif isinstance(obj, Polygon):
@@ -104,10 +105,19 @@ class LineBySlope(Line):
         self._slope = slope
 
 
-class LineSegment(object):
+class LineSegment(Line):
     """ Define a LineSegment object that will make checking if polygons
     intersect much easier."""
     def __init__(self, point1, point2):
+        # In the case of a vertical line
+        if point1.x == point2.x:
+            self._slope = float('inf')
+            self._x = point1.x
+            self._y = point1.y
+        else:
+            self._slope = (1.0 * (point2.y-point1.y)) / (point2.x-point1.x)
+            self._x = point1.x
+            self._y = point1.y
         self._endpoint1 = point1
         self._endpoint2 = point2
 
@@ -128,6 +138,16 @@ class LineSegment(object):
 
     def length(self):
         return self.endpoint1.distance_to_point(self.endpoint2)
+
+    def point_between_endpoints(self, point):
+        """Returns true if the provided point can be found between the x- and
+        y- ranges of the LineSegment's endpoints. This is NOT a test for
+        whether a given point is actually on the segment. Due to floating point
+        equality testing that is problematic"""
+        return point.x >= min(self.endpoint1.x, self.endpoint2.x) and \
+               point.x <= max(self.endpoint1.x, self.endpoint2.x) and \
+               point.y >= min(self.endpoint1.y, self.endpoint2.y) and \
+               point.y <= max(self.endpoint1.y, self.endpoint2.y)
 
 class Polygon(object):
     vertices = []
@@ -203,6 +223,22 @@ class Circle(object):
 
 
 
+def line_line_intersection(line1, line2):
+    """ Returns the point where two lines intersect. If there is no point of 
+    intersection, returns None"""
+    if line1.slope == line2.slope:
+        return None
+    else:
+        a = line1.slope
+        b = line2.slope
+        c = line1.y_intercept
+        d = line2.y_intercept
+
+        x = (d-c)/(a-b)
+        y = a*((d-c)/(a-b)) + c
+        p_intersection = Cartesian(x, y)
+        return p_intersection
+
 def line_line_intersect(line1, line2):
     """ Returns whether two lines intersect. Since the Line class extends 
     infinitely in both directions, this is as simple as seeing if their slopes
@@ -213,9 +249,15 @@ def line_line_intersect(line1, line2):
         return True
 
 def line_linesegment_intersect(line, segment):
-    pass
+    """Here we first determine if two LINES will intersect; if so, we calculate
+    the intersection point. Then, we check to see if that point is between the
+    endponts of the line segment. If so, True; if not, False."""
+    if line_line_intersection(line, segment):
+        return segment.point_between_endpoints(line_line_intersection(line,segment))
 
 def line_circle_intersect(line, circle):
+    """ Taken from Wolfram mathworld: http://mathworld.wolfram.com/Circle-LineIntersection.html
+    This is a straightforward test for whether 
     pass
 
 def line_polygon_intersect(line, polygon):
