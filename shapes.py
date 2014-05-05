@@ -48,7 +48,7 @@ class Cartesian(Point):
 class Line(object):
     """Base Line class that is the parent of LineByPoints and LineBySlope
     classes that are derived from it. All lines can be represented by a slope
-    and a point--here, the y-intercept."""
+    and a point."""
     x = property(lambda self: self._x)
     y = property(lambda self: self._y)
     slope = property(lambda self: self._slope)
