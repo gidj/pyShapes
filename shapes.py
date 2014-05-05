@@ -44,6 +44,7 @@ class Cartesian(Point):
     r = property(lambda self: math.sqrt(self.x**2 + self.y**2))
     theta = property(lambda self: math.atan2(self.y, self.x))
 
+
 class Line(object):
     """Base Line class that is the parent of LineByPoints and LineBySlope
     classes that are derived from it. All lines can be represented by a slope
@@ -57,6 +58,12 @@ class Line(object):
         intersection test method """
         if isinstance(obj, Line):
             return line_line_intersect(self, obj)
+        elif isinstance(obj, LineSegment):
+            return line_linesegment_intersect(self, obj)
+        elif isinstance(obj, Circle):
+            return line_circle_intersect(self, obj)
+        elif isinstance(obj, Polygon):
+            return line_polygon_intersect(self, obj)
 
     def is_vertical(self):
         return self.slope == float('inf')
@@ -107,6 +114,18 @@ class LineSegment(object):
     endpoint1 = property(lambda self: self._endpoint1)
     endpoint2 = property(lambda self: self._endpoint2)
 
+    def intersect(self, obj):
+        """ Check which instance the object is, and dispatch the appropriate 
+        intersection test method """
+        if isinstance(obj, LineSegment):
+            return linesegment_linesegment_intersect(self, obj)
+        elif isinstance(obj, Line):
+            return line_linesegment_intersect(obj, self)
+        elif isinstance(obj, Circle):
+            return circle_linesegment_intersect(obj, self)
+        elif isinstance(obj, Polygon):
+            return linesegment_polygon_intersect(self, obj)
+
     def length(self):
         return self.endpoint1.distance_to_point(self.endpoint2)
 
@@ -125,8 +144,19 @@ class Polygon(object):
             for vertex in self.vertices:
                edges.append(LineSegment(p0, vertex))
                p0 = vertex
-            
             return edges
+
+    def intersect(self, obj):
+        """ Check which instance the object is, and dispatch the appropriate 
+        intersection test method """
+        if isinstance(obj, LineSegment):
+            return linesegment_polygon_intersect(obj, self)
+        elif isinstance(obj, Line):
+            return line_polygon_intersect(self, obj)
+        elif isinstance(obj, Circle):
+            return circle_polygon_intersect(obj, self)
+        elif isinstance(obj, Polygon):
+            return polygon_polygon_intersect(self, obj)
 
     def perimeter(self):
         if len(self.vertices) < 2:
@@ -150,6 +180,18 @@ class Circle(object):
     y = property(lambda self: self.center.y)
     radius = property(lambda self: self._radius)
 
+    def intersect(self, obj):
+        """ Check which instance the object is, and dispatch the appropriate 
+        intersection test method """
+        if isinstance(obj, LineSegment):
+            return circle_linesegment_intersect(self, obj)
+        elif isinstance(obj, Line):
+            return line_circle_intersect(obj, self)
+        elif isinstance(obj, Circle):
+            return circle_circle_intersect(self, obj)
+        elif isinstance(obj, Polygon):
+            return circle_polygon_intersect(self, obj)
+
     def perimeter(self):
         """ returns the perimeter of the circle """
         return 2 * math.pi * self.radius
@@ -162,7 +204,13 @@ class Circle(object):
 
 
 def line_line_intersect(line1, line2):
-    pass
+    """ Returns whether two lines intersect. Since the Line class extends 
+    infinitely in both directions, this is as simple as seeing if their slopes
+    are equal and returning False if equal, True if otherwise """
+    if line1.slope == line2.slope:
+        return False
+    else:
+        return True
 
 def line_linesegment_intersect(line, segment):
     pass
@@ -188,7 +236,7 @@ def linesegment_linesegment_intersect(segment1, segment2):
 def linesegment_polygon_intersect(segment, polygon):
     pass
 
-def polygon_polygon_segment1(polygon1, polygon2):
+def polygon_polygon_intersect(polygon1, polygon2):
     pass
 
 
