@@ -84,8 +84,10 @@ class CirclesTestCases(unittest.TestCase):
     def setUp(self):
         self.p = Cartesian(0, 0)
         self.p1 = Cartesian(1, 1)
+        self.p2 = Cartesian(10, 20)
         self.circ = Circle(self.p, 5)
         self.circ1 = Circle(self.p1, 1)
+        self.circ2 = Circle(self.p2, 1)
 
     def test_perimeter(self):
         self.assertAlmostEqual(self.circ1.perimeter(), 2*pi)
@@ -97,6 +99,16 @@ class CirclesTestCases(unittest.TestCase):
     def test_point_outside_of_circle(self):
         test_point = Cartesian(10, 10)
         self.assertFalse(self.circ.point_in_circle(test_point))
+
+    def test_two_intersecting_circles_intersect(self):
+        self.assertTrue(self.circ.intersect(self.circ1))
+        # Make sure it's reflexive
+        self.assertTrue(self.circ1.intersect(self.circ))
+
+    def test_two_nonintersecting_circles_not_intersect(self):
+        self.assertFalse(self.circ.intersect(self.circ2))
+        # make sure it's relfexive
+        self.assertFalse(self.circ2.intersect(self.circ))
 
 class PolygonTestCases(unittest.TestCase):
     """Test cases with only polygons"""
