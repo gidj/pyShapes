@@ -221,14 +221,18 @@ class Circle(object):
         return 2 * math.pi * self.radius
 
     def point_in_circle(self, point):
-        """ returns true if the given Point object lies on or within the 
+        """ returns true if the given Point object lies on or within the
         perimeter of the Circle object """
         return point.distance_to_point(self.center) <= self.radius
 
-
+# The following methods test for the various cases and interactions between
+# different types of objects. Fundamentally, there are only actually three
+# types of interactions: 1) Line-Line; 2) Circle-Circle; and 3) Circle-Line.
+# All other types of intersection testing can, with enough abstraction, be
+# implemented in terms of these three. Perhaps a future project.
 
 def line_line_intersection(line1, line2):
-    """ Returns the point where two lines intersect. If there is no point of 
+    """ Returns the point where two lines intersect. If there is no point of
     intersection, returns None"""
     # If two lines have the same slope, they never intersect
     if line1.slope == line2.slope:
