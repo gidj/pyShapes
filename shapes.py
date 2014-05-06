@@ -6,8 +6,8 @@ class Point(object):
     x = property(lambda self: self._x)
     y = property(lambda self: self._y)
     r = property(lambda self: self._r)
-    theta =  property(lambda self: self._theta)
-    
+    theta = property(lambda self: self._theta)
+
     def __unicode__(self): 
         return "x={0}, y={1}, r={2}, theta={3}".format(self.x, self.y, self.r, self.theta)
 
@@ -233,6 +233,10 @@ def line_line_intersection(line1, line2):
         x = line1.x
         y = line2.y_given_x(x)
         return Cartesian(x, y)
+    elif line2.slope == float('inf'):
+        x = line2.x
+        y = line2.y_given_x(x)
+        return Cartesian(x, y)
     else:
         a = line1.slope
         b = line2.slope
@@ -241,9 +245,8 @@ def line_line_intersection(line1, line2):
 
         x = (d-c)/(a-b)
         y = a*((d-c)/(a-b)) + c
-        p_intersection = Cartesian(x, y)
-        return p_intersection
-
+        return Cartesian(x, y)
+         
 def line_line_intersect(line1, line2):
     """ Returns whether two lines intersect. Since the Line class extends 
     infinitely in both directions, this is as simple as seeing if their slopes
@@ -296,22 +299,37 @@ def circle_circle_intersect(circle1, circle2):
             circle1.radius + circle2.radius)
 
 def circle_linesegment_intersect(circle, segment):
-    """Exploit the fact that LineSegments are also considered lines, and first
-    determine if the line that segment is a portion of intersects the circle
-    at all. If so, then find the intersection point and determine if it is in
-    the segment range"""
-    if line_circle_intersect(circle, segment):
-        pass
-    else:
+    """ Returns true if a LineSegment intersects Circle"""
+    #To determine if a LineSegment intersects a Circle, we first determine
+    #the line perpendicular to the given LineSegment that runs through the
+    #center of the circle. With this line we find the intersection
+
+    slope = -1 / segment.slope
+    perpendicular_line = LineBySlope(circle.center, slope)
+
+    # Now we find the intersection between segment and perpendiculary line;
+    # this point will give us the nearest point of the line that segment is
+    # part of to circle.
+
+    lines_intersect = line_line_intersection(segment, perpendicular_line)
+
+    # This point is the closest point to the circle on the line that contains 
+    # the segment. If the point is on or in the circle, then that means the
+    # segment may intersect the circle
+
+    if circle.point_in_circle(lines_intersect):
+        # The case where it is outside the circle
         return False
+    else:
+        # We check two things: is the point in the segment range? If it is,
+        # we are finished and return True. We also check whether either endpoint
+        # of the segment is in the circle. If so, True; if neither, False.
+        return segment.point_between_endpoints(lines_intersect) or \
+                circle.point_in_circle(segment.endpoint1) or \
+                circle.point_in_circle(segment.endpoint2)
 
 def circle_polygon_intersect(circle, polygon):
     """ This method returns whether a line segment intersects with a circle.
-    This is reduced to the following:
-        a. Does the line that the segment is a part of intersect? If yes, then:
-        b. Are either of the endpoints contained within the circle? If no, then:
-        c. Calculate the intersection points and see if they are on the line
-        segment
     """
     for edge in polygon.edges():
         if circle_linesegment_intersect(circle, edge):
@@ -324,7 +342,7 @@ def linesegment_linesegment_intersect(segment1, segment2):
     return line_linesegment_intersect(segment1, segment2)
 
 def linesegment_polygon_intersect(segment, polygon):
-    """ Tests to see if each edge of a Polygon intersects with the given line 
+    """ Tests to see if each edge of a Polygon intersects with the given line
     segment. If any one edge does, return True. If none do, return False."""
     for edge in polygon.edges():
         if linesegment_linesegment_intersect(edge, segment):
@@ -340,5 +358,4 @@ def polygon_polygon_intersect(polygon1, polygon2):
             if linesegment_linesegment_intersect(edge1, edge2):
                 return True
     return False
-
 
