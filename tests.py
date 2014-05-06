@@ -1,7 +1,13 @@
 import unittest
 from math import pi
-from shapes import Cartesian, Polar, Line, LineByPoints, LineBySlope
+from shapes import Cartesian, Polar, Line, LineByPoints, LineBySlope, LineSegment
 from shapes import Circle, Polygon
+from shapes import line_line_intersect, line_line_intersection, line_linesegment_intersect, \
+        line_circle_intersect, line_polygon_intersect, circle_circle_intersect, \
+        circle_linesegment_intersect, circle_polygon_intersect, \
+        linesegment_linesegment_intersect, linesegment_polygon_intersect, \
+        polygon_polygon_intersect
+
 
 class PolarPointsTestCases(unittest.TestCase):
     """Basic tests on Point objects"""
@@ -110,6 +116,26 @@ class CirclesTestCases(unittest.TestCase):
         # make sure it's relfexive
         self.assertFalse(self.circ2.intersect(self.circ))
 
+
+class LineSegmentTests(unittest.TestCase):
+    def setUp(self):
+        self.seg1 = LineSegment(Cartesian(-2, -1), Cartesian(1, 2))
+        self.seg2 = LineSegment(Cartesian(0, 0), Cartesian(3, -3))
+        self.vert = LineSegment(Cartesian(-1, 1), Cartesian(-1, 4))
+        self.horiz = LineSegment(Cartesian(0, 0), Cartesian(6, 0))
+
+    def test_segments_that_arent_parallel_but_dont_intersect(self):
+        self.assertFalse(linesegment_linesegment_intersect(
+            self.seg1, self.seg2))
+
+    def test_vertical_segment_not_intersecting(self):
+        self.assertFalse(linesegment_linesegment_intersect(
+            self.seg1, self.vert))
+
+    def test_horizontal_segment_not_intersecting(self):
+        self.assertFalse(linesegment_linesegment_intersect(
+            self.seg1, self.horiz))
+
 class PolygonTestCases(unittest.TestCase):
     """Test cases with only polygons"""
     def setUp(self):
@@ -117,7 +143,7 @@ class PolygonTestCases(unittest.TestCase):
         self.p2 = Cartesian(1, 2)
         self.p3 = Cartesian(3, 2)
         self.p4 = Cartesian(3, 0)
-        poly1 = Polygon(self.p1,
+        self.poly1 = Polygon(self.p1,
                         self.p2,
                         self.p3,
                         self.p4)
@@ -126,7 +152,7 @@ class PolygonTestCases(unittest.TestCase):
         self.p6 = Cartesian(2, 4)
         self.p7 = Cartesian(4, 2)
         self.p8 = Cartesian(3, 1)
-        poly2 = Polygon(self.p5,
+        self.poly2 = Polygon(self.p5,
                         self.p6,
                         self.p7,
                         self.p8)
@@ -135,22 +161,23 @@ class PolygonTestCases(unittest.TestCase):
         self.p10 = Cartesian(2, 1)
         self.p11 = Cartesian(2, -1)
         self.p12 = Cartesian(-1, -1)
-        poly3 = Polygon(self.p9,
+        self.poly3 = Polygon(self.p9,
                         self.p10,
                         self.p11,
                         self.p12)
 
-        def test_poly1_poly2_intersect(self):
-            self.assertTrue(self.poly1.intersect(self.poly2))
-            self.assertTrue(self.poly2.intersect(self.poly1))
-            
-        def test_poly2_poly3_intersect(self):
-            self.assertTrue(self.poly2.intersect(self.poly3))
-            self.assertTrue(self.poly3.intersect(self.poly2))
+    def test_poly1_poly2_intersect(self):
+        self.assertTrue(self.poly1.intersect(self.poly2))
+        self.assertTrue(self.poly2.intersect(self.poly1))
+        
+    def test_poly1_poly3_intersect(self):
+        self.assertTrue(self.poly1.intersect(self.poly3))
+        self.assertTrue(self.poly3.intersect(self.poly1))
 
-        def test_poly1_poly3_dont_intersect(self):
-            self.assertFalse(self.poly1.intersect(self.poly3))
-            self.assertFalse(self.poly3.intersect(self.poly1))
+    def test_poly2_poly3_dont_intersect(self):
+        self.assertFalse(self.poly2.intersect(self.poly3))
+        self.assertFalse(self.poly3.intersect(self.poly2))
+
 
 if __name__ == '__main__':
     unittest.main()
