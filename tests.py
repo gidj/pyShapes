@@ -122,8 +122,35 @@ class PolygonTestCases(unittest.TestCase):
                         self.p3,
                         self.p4)
 
-        pass
+        self.p5 = Cartesian(1, 3)
+        self.p6 = Cartesian(2, 4)
+        self.p7 = Cartesian(4, 2)
+        self.p8 = Cartesian(3, 1)
+        poly2 = Polygon(self.p5,
+                        self.p6,
+                        self.p7,
+                        self.p8)
 
+        self.p9 = Cartesian(-1, 1)
+        self.p10 = Cartesian(2, 1)
+        self.p11 = Cartesian(2, -1)
+        self.p12 = Cartesian(-1, -1)
+        poly3 = Polygon(self.p9,
+                        self.p10,
+                        self.p11,
+                        self.p12)
+
+        def test_poly1_poly2_intersect(self):
+            self.assertTrue(self.poly1.intersect(self.poly2))
+            self.assertTrue(self.poly2.intersect(self.poly1))
+            
+        def test_poly2_poly3_intersect(self):
+            self.assertTrue(self.poly2.intersect(self.poly3))
+            self.assertTrue(self.poly3.intersect(self.poly2))
+
+        def test_poly1_poly3_dont_intersect(self):
+            self.assertFalse(self.poly1.intersect(self.poly3))
+            self.assertFalse(self.poly3.intersect(self.poly1))
 
 if __name__ == '__main__':
     unittest.main()
