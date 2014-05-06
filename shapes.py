@@ -229,6 +229,10 @@ def line_line_intersection(line1, line2):
     intersection, returns None"""
     if line1.slope == line2.slope:
         return None
+    elif line1.slope == float('inf'):
+        x = line1.x
+        y = line2.y_given_x(x)
+        return Cartesian(x, y)
     else:
         a = line1.slope
         b = line2.slope
