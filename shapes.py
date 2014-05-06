@@ -105,7 +105,7 @@ class LineBySlope(Line):
 
 
 class LineSegment(Line):
-    """ Define a LineSegment object that will make checking if polygons
+    """ Define a LineSegment object that will make checking whether polygons
     intersect much easier."""
     def __init__(self, point1, point2):
         # In the case of a vertical line
@@ -142,19 +142,26 @@ class LineSegment(Line):
         y- ranges of the LineSegment's endpoints. This is NOT a test for
         whether a given point is actually on the segment. Due to floating point
         equality testing that is problematic"""
-        return point.x >= min(self.endpoint1.x, self.endpoint2.x) and \
-               point.x <= max(self.endpoint1.x, self.endpoint2.x) and \
-               point.y >= min(self.endpoint1.y, self.endpoint2.y) and \
+        if self.slope == float('inf'):
+            return point.y >= min(self.endpoint1.y, self.endpoint2.y) and \
                point.y <= max(self.endpoint1.y, self.endpoint2.y)
+        else:
+            return point.x >= min(self.endpoint1.x, self.endpoint2.x) and \
+                   point.x <= max(self.endpoint1.x, self.endpoint2.x) and \
+                   point.y >= min(self.endpoint1.y, self.endpoint2.y) and \
+                   point.y <= max(self.endpoint1.y, self.endpoint2.y)
 
 
 class Polygon(object):
-    vertices = []
+    """Takes any number of Point objects, and returns a Polygon object."""
     def __init__(self, *args):
+        self.vertices = []
         for point in args:
             self.vertices.append(point)
 
     def edges(self):
+        """Returns a list of LineSegment objects, one for each segment between
+        each vertex in vertices """
         edges = []
         if len(self.vertices) < 2:
             return edges
@@ -233,7 +240,7 @@ def line_line_intersection(line1, line2):
         return Cartesian(x, y)
     elif line2.slope == float('inf'):
         x = line2.x
-        y = line2.y_given_x(x)
+        y = line1.y_given_x(x)
         return Cartesian(x, y)
     else:
         # The general case
@@ -338,7 +345,14 @@ def circle_polygon_intersect(circle, polygon):
 def linesegment_linesegment_intersect(segment1, segment2):
     """ This is just a slightly special case of line and linesegment
     intersection. The test is the same."""
-    return line_linesegment_intersect(segment1, segment2)
+    inter_point = line_line_intersection(segment1, segment2)
+    if inter_point:
+        return segment1.point_between_endpoints(inter_point) and \
+                segment2.point_between_endpoints(inter_point)
+    else:
+        return False
+    #return line_linesegment_intersect(segment1, segment2) and \
+            #line_linesegment_intersect(segment2, segment1)
 
 def linesegment_polygon_intersect(segment, polygon):
     """ Tests to see if each edge of a Polygon intersects with the given line 
