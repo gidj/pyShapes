@@ -6,8 +6,8 @@ class Point(object):
     x = property(lambda self: self._x)
     y = property(lambda self: self._y)
     r = property(lambda self: self._r)
-    theta = property(lambda self: self._theta)
-
+    theta =  property(lambda self: self._theta)
+    
     def __unicode__(self): 
         return "x={0}, y={1}, r={2}, theta={3}".format(self.x, self.y, self.r, self.theta)
 
@@ -55,8 +55,7 @@ class Line(object):
     y_intercept = property(lambda self: self.y_given_x(0))
 
     def intersect(self, obj):
-        """ Check which instance the object is, and dispatch the appropriate 
-        intersection test method """
+        """ Determines whether given object and self intersect on a plane """
         if isinstance(obj, LineSegment):
             return line_linesegment_intersect(self, obj)
         elif isinstance(obj, Line):
@@ -125,8 +124,7 @@ class LineSegment(Line):
     endpoint2 = property(lambda self: self._endpoint2)
 
     def intersect(self, obj):
-        """ Check which instance the object is, and dispatch the appropriate 
-        intersection test method """
+        """ Determines whether given object and self intersect on a plane """
         if isinstance(obj, LineSegment):
             return linesegment_linesegment_intersect(self, obj)
         elif isinstance(obj, Line):
@@ -168,8 +166,7 @@ class Polygon(object):
             return edges
 
     def intersect(self, obj):
-        """ Check which instance the object is, and dispatch the appropriate 
-        intersection test method """
+        """ Determines whether given object and self intersect on a plane """
         if isinstance(obj, LineSegment):
             return linesegment_polygon_intersect(obj, self)
         elif isinstance(obj, Line):
@@ -202,8 +199,7 @@ class Circle(object):
     radius = property(lambda self: self._radius)
 
     def intersect(self, obj):
-        """ Check which instance the object is, and dispatch the appropriate 
-        intersection test method """
+        """ Determines whether given object and self intersect on a plane """
         if isinstance(obj, LineSegment):
             return circle_linesegment_intersect(self, obj)
         elif isinstance(obj, Line):
@@ -227,8 +223,10 @@ class Circle(object):
 def line_line_intersection(line1, line2):
     """ Returns the point where two lines intersect. If there is no point of 
     intersection, returns None"""
+    # If two lines have the same slope, they never intersect
     if line1.slope == line2.slope:
         return None
+    # if either line is vertical, simply find the value of y
     elif line1.slope == float('inf'):
         x = line1.x
         y = line2.y_given_x(x)
@@ -238,6 +236,7 @@ def line_line_intersection(line1, line2):
         y = line2.y_given_x(x)
         return Cartesian(x, y)
     else:
+        # The general case
         a = line1.slope
         b = line2.slope
         c = line1.y_intercept
@@ -342,7 +341,7 @@ def linesegment_linesegment_intersect(segment1, segment2):
     return line_linesegment_intersect(segment1, segment2)
 
 def linesegment_polygon_intersect(segment, polygon):
-    """ Tests to see if each edge of a Polygon intersects with the given line
+    """ Tests to see if each edge of a Polygon intersects with the given line 
     segment. If any one edge does, return True. If none do, return False."""
     for edge in polygon.edges():
         if linesegment_linesegment_intersect(edge, segment):
@@ -358,4 +357,5 @@ def polygon_polygon_intersect(polygon1, polygon2):
             if linesegment_linesegment_intersect(edge1, edge2):
                 return True
     return False
+
 
